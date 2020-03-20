@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<!-- http://maven.apache.org/pom.html#Quick_Overview -->
@@ -77,8 +78,8 @@
 			<artifactId>jsr305</artifactId>
 			<version>${jsr305.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
-		explicitly required since Java 9 -->
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api 
+			explicitly required since Java 9 -->
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
@@ -88,7 +89,8 @@
 
 	<build>
 		<extensions>
-			<!-- Extension/plugin that generates various useful platform-dependent project properties normalized from ${os.name} and ${os.arch} -->
+			<!-- Extension/plugin that generates various useful platform-dependent 
+				project properties normalized from ${os.name} and ${os.arch} -->
 			<extension>
 				<groupId>kr.motd.maven</groupId>
 				<artifactId>os-maven-plugin</artifactId>
@@ -96,7 +98,8 @@
 			</extension>
 		</extensions>
 		<plugins>
-			<!--  Plugin used to compile the sources of your project. Java 9 requires at least version 3.7.0 to properly handle modules. -->
+			<!-- Plugin used to compile the sources of your project. Java 9 requires 
+				at least version 3.7.0 to properly handle modules. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -106,7 +109,9 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-			<!-- Plugin that uses Protocol Buffer Compiler (protoc) tool to generate Java source files from .proto (protocol buffer definition) files for the specified project -->
+			<!-- Plugin that uses Protocol Buffer Compiler (protoc) tool to generate 
+				Java source files from .proto (protocol buffer definition) files for the 
+				specified project -->
 			<plugin>
 				<groupId>org.xolstice.maven.plugins</groupId>
 				<artifactId>protobuf-maven-plugin</artifactId>
@@ -125,7 +130,9 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Plugin that provides goals to control certain environmental constraints such as Maven version, JDK version and OS family along with many more built-in rules and user created rules. -->
+			<!-- Plugin that provides goals to control certain environmental constraints 
+				such as Maven version, JDK version and OS family along with many more built-in 
+				rules and user created rules. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
@@ -138,12 +145,14 @@
 						</goals>
 						<configuration>
 							<rules>
-								<!-- This rule requires a Maven version. Maven supports Java 9 and higher from version 3.5.0 onward. -->
+								<!-- This rule requires a Maven version. Maven supports Java 9 and 
+									higher from version 3.5.0 onward. -->
 								<requireMavenVersion>
 									<version>3.5.0</version>
 								</requireMavenVersion>
-								<!-- This rule requires that the version for each dependency resolved during a build, is equal to or higher than all transitive dependency declarations. -->
-								<requireUpperBoundDeps/>
+								<!-- This rule requires that the version for each dependency resolved 
+									during a build, is equal to or higher than all transitive dependency declarations. -->
+								<requireUpperBoundDeps />
 							</rules>
 						</configuration>
 					</execution>
