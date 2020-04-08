@@ -6,6 +6,7 @@ import example.grpc.HelloWorldServiceGrpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import pt.ulisboa.tecnico.sdis.zk.ZKNaming;
 
 public class HelloClient {
 
@@ -19,15 +20,17 @@ public class HelloClient {
 		}
 
 		// check arguments
-		if (args.length < 2) {
+		if (args.length < 3) {
 			System.err.println("Argument(s) missing!");
-			System.err.printf("Usage: java %s host port%n", HelloClient.class.getName());
+			System.err.printf("Usage: java %s path zooHost zooPort%n", HelloClient.class.getName());
 			return;
 		}
 
-		final String host = args[0];
-		final int port = Integer.parseInt(args[1]);
-		final String target = host + ":" + port;
+		final String path = args[0];
+		final String zooHost = args[1];
+		final String zooPort = args[2];
+		ZKNaming zkNaming = new ZKNaming(zooHost, zooPort);
+		final String target = zkNaming.lookup(path).getURI();
 
 		// Channel is the abstraction to connect to a service endpoint
 		// Let us use plaintext communication because we do not have certificates

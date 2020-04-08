@@ -3,6 +3,7 @@ package example.grpc.server;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import pt.ulisboa.tecnico.sdis.zk.ZKNaming;
 
 public class HelloServer {
 
@@ -16,26 +17,41 @@ public class HelloServer {
 		}
 
 		// check arguments
-		if (args.length < 1) {
+		if (args.length < 5) {
 			System.err.println("Argument(s) missing!");
-			System.err.printf("Usage: java %s port%n", Server.class.getName());
+			System.err.printf("Usage: java %s path zooHost zooPort host port%n", Server.class.getName());
 			return;
 		}
 
-		final int port = Integer.parseInt(args[0]);
+		final String zooHost = args[0];
+		final String zooPort = args[1];
+		final String path = args[2];
+		final String host = args[3];
+		final String port = args[4];
 		final BindableService impl = new HelloWorldServiceImpl();
+		ZKNaming zkNaming = null;
 
-		// Create a new server to listen on port
-		Server server = ServerBuilder.forPort(port).addService(impl).build();
+		try {
 
-		// Start the server
-		server.start();
+			zkNaming = new ZKNaming(zooHost, zooPort);
+			zkNaming.rebind(path, host, port);
 
-		// Server threads are running in the background.
-		System.out.println("Server started");
+			// Create a new server to listen on port
+			Server server = ServerBuilder.forPort(Integer.parseInt(port)).addService(impl).build();
 
-		// Do not exit the main thread. Wait until server is terminated.
-		server.awaitTermination();
+			// Start the server
+			server.start();
+
+			// Server threads are running in the background.
+			System.out.println("Server started");
+
+			// Do not exit the main thread. Wait until server is terminated.
+			server.awaitTermination();
+		} finally {
+			if (zkNaming != null) {
+				zkNaming.unbind(path, host, String.valueOf(port));
+			}
+		}
 	}
 
 }

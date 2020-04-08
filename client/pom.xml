@@ -24,8 +24,9 @@
 		<!-- application properties -->
 		<mainclass>example.grpc.client.HelloClient</mainclass>
 
-		<server.host>localhost</server.host>
-		<server.port>8080</server.port>
+		<server.path>/grpcHello</server.path>
+		<zoo.host>localhost</zoo.host>
+		<zoo.port>2181</zoo.port>
 	</properties>
 
 	<dependencies>
@@ -41,6 +42,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>pt.ulisboa.tecnico.sdis</groupId>
+			<artifactId>zk-naming</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 
@@ -72,8 +78,9 @@
 				<configuration>
 					<mainClass>${mainclass}</mainClass>
 					<arguments>
-						<argument>${server.host}</argument>
-						<argument>${server.port}</argument>
+						<argument>${server.path}</argument>
+						<argument>${zoo.host}</argument>
+						<argument>${zoo.port}</argument>
 					</arguments>
 				</configuration>
 			</plugin>
