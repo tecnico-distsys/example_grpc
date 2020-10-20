@@ -1,6 +1,6 @@
-# gRPC example contract
+# gRPC testing contract
 
-This small library contains the protocol buffers (`protobuf`) of the Hello World gRPC application.
+This small library contains the protocol buffers (`protobuf`) of the baseline testing gRPC application.
 
 The interface is shared by the server, that implements it, and by the client, that needs it to make remote calls.
 
@@ -25,4 +25,4 @@ Check that the desired POM is selected and 'Finish'.
 
 ----
 
-[SD Faculty](mailto:leic-sod@disciplinas.tecnico.ulisboa.pt)
+[SD Faculty](mailto:leti-sod@disciplinas.tecnico.ulisboa.pt)

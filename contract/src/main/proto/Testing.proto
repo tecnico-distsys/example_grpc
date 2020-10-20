@@ -1,0 +1,5 @@
+//
+// Protocol buffers definition for gRPC testing
+//
+syntax = "proto3";
+package pt.tecnico.testing.grpc;

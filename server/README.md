@@ -1,16 +1,14 @@
-# gRPC example server
+# gRPC testing server
 
-This is a Hello World example of a gRPC application.
+This is a gRPC server defined by the protobuf specification.
 
-The server depends on the contract module, where the protocol buffers shared between server and client are defined.
-The server needs to know the interface to provide an implementation for it.
-
+The server runs in a stand-alone process.
 
 ## Instructions for using Maven
 
-Make sure that you installed the contract module first.
+Make sure that the parent POM was installed first.
 
-To compile and run the server:
+To compile and run:
 
 ```
 mvn compile exec:java
@@ -28,4 +26,4 @@ Check that the desired POM is selected and 'Finish'.
 
 ----
 
-[SD Faculty](mailto:leic-sod@disciplinas.tecnico.ulisboa.pt)
+[SD Faculty](mailto:leti-sod@disciplinas.tecnico.ulisboa.pt)

@@ -1,66 +1,64 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<!-- http://maven.apache.org/pom.html#Quick_Overview -->
 
-	<groupId>example.grpc</groupId>
-	<artifactId>hello-grpc-server</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<!-- Please replace 'CXX' below with your C (campus) with A (Alameda) / 
+		T (Tagus); and your group number with two digits. Then delete this comment. -->
+	<parent>
+		<groupId>pt.tecnico.testing.C00</groupId>
+		<artifactId>Testing-local</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>server-local</artifactId>
 	<packaging>jar</packaging>
-
 	<name>${project.artifactId}</name>
 
 	<properties>
-		<!-- compiler properties -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- see parent POM for more properties -->
 
-		<java.version>11</java.version>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-
-		<exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-
-		<!-- application properties -->
-		<mainclass>example.grpc.server.HelloServer</mainclass>
-
+		<mainclass>pt.tecnico.testing.TestingServerApp</mainclass>
 		<server.port>8080</server.port>
 	</properties>
 
 	<dependencies>
 		<!-- contract brings gRPC dependencies with it -->
 		<dependency>
-			<groupId>example.grpc</groupId>
-			<artifactId>hello-grpc-contract</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>contract</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<!-- JUnit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 		<plugins>
-			<!-- Plugin used to compile the sources of your project. Java 9 requires 
-				at least version 3.7.0 to properly handle modules. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${version.maven-resources-plugin}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
 				</configuration>
 			</plugin>
-			<!-- Plugin that provides two goals to execute system and Java programs -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>${exec-maven-plugin.version}</version>
+				<version>${version.exec-maven-plugin}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -73,6 +71,27 @@
 					<arguments>
 						<argument>${server.port}</argument>
 					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>${version.appassembler-maven-plugin}</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>${mainclass}</mainClass>
+							<id>${project.artifactId}</id>
+						</program>
+					</programs>
 				</configuration>
 			</plugin>
 		</plugins>

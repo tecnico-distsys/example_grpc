@@ -1,19 +1,21 @@
-# gRPC example client
+# gRPC testing client
 
-This is a Hello World example of a gRPC client application.
-
-The client depends on the contract module, where the protocol buffers shared between server and client are defined.
-The client needs to know the interface to make remote calls.
-
+This is a gRPC client that provides a frontend and performs integration tests on a running server. The integration tests verify the responses of the server to a set of requests.
 
 ## Instructions for using Maven
 
-Make sure that you installed the contract module first.
+Make sure that the parent POM was installed first.
 
-To compile and run the client:
+To compile and install:
 
 ```
-mvn compile exec:java
+mvn install
+```
+
+To compile and run integration tests, first start the server, and then:
+
+```
+mvn verify
 ```
 
 
@@ -28,4 +30,4 @@ Check that the desired POM is selected and 'Finish'.
 
 ----
 
-[SD Faculty](mailto:leic-sod@disciplinas.tecnico.ulisboa.pt)
+[SD Faculty](mailto:leti-sod@disciplinas.tecnico.ulisboa.pt)
