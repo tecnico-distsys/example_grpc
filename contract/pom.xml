@@ -16,20 +16,33 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<java.version>1.8</java.version><!-- also compatible with 11 -->
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-
-		<os-maven-plugin.version>1.6.2</os-maven-plugin.version>
-		<maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+		<version.java>1.8</version.java><!-- also compatible with 11 -->
+		
+		<version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
+		<version.os-maven-plugin>1.6.2</version.os-maven-plugin>
+		<version.maven-enforcer-plugin>1.4.1</version.maven-enforcer-plugin>
 
 		<!-- gRPC properties -->
-		<grpc.version>1.36.0</grpc.version>
-		<protoc.version>3.15.3</protoc.version>
-		<protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+		<version.grpc>1.36.0</version.grpc>
+		<version.protoc>3.12.0</version.protoc><!-- aligned with the gRPC dependency version -->
+		<version.protobuf-maven-plugin>0.6.1</version.protobuf-maven-plugin>
 
-		<jsr305.version>3.0.2</jsr305.version>
-		<javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+		<version.javax.annotation-api>1.3.2</version.javax.annotation-api>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- gRPC BoM (Bill-of-Materials) defines a set of versions for subdependencies. -->
+			<!-- https://mvnrepository.com/artifact/io.grpc/grpc-bom -->
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-bom</artifactId>
+				<version>${version.grpc}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<!-- Common Annotations for the JavaTM Platform API
@@ -38,24 +51,22 @@
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
+			<version>${version.javax.annotation-api}</version>
 		</dependency>
 		<!-- 
-			gRPC dependencies 
+			gRPC dependencies (versions are defined by the BoM).
 		-->
 		<!-- gRPC Protocol Buffers
 			https://mvnrepository.com/artifact/io.grpc/grpc-protobuf -->
 		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-protobuf</artifactId>
-			<version>${grpc.version}</version>
 		</dependency>
 		<!-- gRPC Stub support
 			https://mvnrepository.com/artifact/io.grpc/grpc-stub -->
 		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-stub</artifactId>
-			<version>${grpc.version}</version>
 		</dependency>
 		<!-- Netty is an asynchronous, event-driven, network application development framework.
 			https://mvnrepository.com/artifact/io.grpc/grpc-netty-shaded 
@@ -64,7 +75,6 @@
 		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-netty-shaded</artifactId>
-			<version>${grpc.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<!-- gRPC Testing support
@@ -72,44 +82,42 @@
 		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-testing</artifactId>
-			<version>${grpc.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<extensions>
-			<!-- Extension/plugin that generates various useful platform-dependent 
+			<!-- Extension/plug-in that generates various useful platform-dependent 
 				project properties normalized from ${os.name} and ${os.arch} -->
 			<extension>
 				<groupId>kr.motd.maven</groupId>
 				<artifactId>os-maven-plugin</artifactId>
-				<version>${os-maven-plugin.version}</version>
+				<version>${version.os-maven-plugin}</version>
 			</extension>
 		</extensions>
 		<plugins>
-			<!-- Plugin used to compile the sources of your project. Java 9 requires 
+			<!-- Plug-in used to compile the sources of your project. Java 9 requires 
 				at least version 3.7.0 to properly handle modules. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
+				<version>${version.maven-compiler-plugin}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<source>${version.java}</source>
+					<target>${version.java}</target>
 				</configuration>
 			</plugin>
-			<!-- Plugin that uses Protocol Buffer Compiler (protoc) tool to generate 
+			<!-- Plug-in that uses Protocol Buffer Compiler (protoc) tool to generate 
 				Java source files from .proto (protocol buffer definition) files for the 
 				specified project -->
 			<plugin>
 				<groupId>org.xolstice.maven.plugins</groupId>
 				<artifactId>protobuf-maven-plugin</artifactId>
-				<version>${protobuf-maven-plugin.version}</version>
 				<configuration>
-					<protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
+					<protocArtifact>com.google.protobuf:protoc:${version.protoc}:exe:${os.detected.classifier}</protocArtifact>
 					<pluginId>grpc-java</pluginId>
-					<pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+					<pluginArtifact>io.grpc:protoc-gen-grpc-java:${version.grpc}:exe:${os.detected.classifier}</pluginArtifact>
 				</configuration>
 				<executions>
 					<execution>
@@ -126,7 +134,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>${maven-enforcer-plugin.version}</version>
+				<version>${version.maven-enforcer-plugin}</version>
 				<executions>
 					<execution>
 						<id>enforce</id>

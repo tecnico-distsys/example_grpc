@@ -16,10 +16,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<java.version>1.8</java.version><!-- also compatible with 11 -->
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<version.java>1.8</version.java><!-- also compatible with 11 -->
 
-		<exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+		<version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
+		<version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
 
 		<!-- application properties -->
 		<mainclass>example.grpc.server.HelloServer</mainclass>
@@ -38,22 +38,22 @@
 
 	<build>
 		<plugins>
-			<!-- Plugin used to compile the sources of your project. Java 9 requires 
+			<!-- Plug-in used to compile the sources of your project. Java 9 requires 
 				at least version 3.7.0 to properly handle modules. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
+				<version>${version.maven-compiler-plugin}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<source>${version.java}</source>
+					<target>${version.java}</target>
 				</configuration>
 			</plugin>
-			<!-- Plugin that provides two goals to execute system and Java programs -->
+			<!-- Plug-in that provides two goals to execute system and Java programs -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>${exec-maven-plugin.version}</version>
+				<version>${version.exec-maven-plugin}</version>
 				<executions>
 					<execution>
 						<goals>
