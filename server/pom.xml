@@ -8,22 +8,19 @@
 	<artifactId>hello-grpc-server</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
 	<name>${project.artifactId}</name>
 
+	<!-- Properties are variables used to customize the behavior of Maven and its plug-ins. -->
 	<properties>
-		<!-- compiler properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<version.java>1.8</version.java><!-- also compatible with 11 -->
+		<version.java>11</version.java>
 
 		<version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
 		<version.exec-maven-plugin>3.0.0</version.exec-maven-plugin>
 
-		<!-- application properties -->
 		<mainclass>pt.tecnico.grpc.server.HelloServer</mainclass>
-
 		<server.port>8080</server.port>
 	</properties>
 
