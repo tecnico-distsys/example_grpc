@@ -6,31 +6,32 @@ import io.grpc.ServerBuilder;
 
 public class HelloServer {
 
+	/** Server host port. */
+	private static int port;
+
 	public static void main(String[] args) throws Exception {
 		System.out.println(HelloServer.class.getSimpleName());
 
-		// receive and print arguments
+		// Print received arguments.
 		System.out.printf("Received %d arguments%n", args.length);
 		for (int i = 0; i < args.length; i++) {
 			System.out.printf("arg[%d] = %s%n", i, args[i]);
 		}
 
-		// check arguments
+		// Check arguments.
 		if (args.length < 1) {
 			System.err.println("Argument(s) missing!");
 			System.err.printf("Usage: java %s port%n", Server.class.getName());
 			return;
 		}
 
-		final int port = Integer.parseInt(args[0]);
+		port = Integer.valueOf(args[0]);
 		final BindableService impl = new HelloWorldServiceImpl();
 
-		// Create a new server to listen on port
+		// Create a new server to listen on port.
 		Server server = ServerBuilder.forPort(port).addService(impl).build();
-
-		// Start the server
+		// Start the server.
 		server.start();
-
 		// Server threads are running in the background.
 		System.out.println("Server started");
 
