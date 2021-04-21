@@ -6,6 +6,10 @@ import pt.tecnico.grpc.HelloWorldServiceGrpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
+import java.util.concurrent.TimeUnit;
+
 
 public class HelloClient {
 
@@ -38,9 +42,21 @@ public class HelloClient {
 		// or an async stub with Future are always possible.
 		HelloWorldServiceGrpc.HelloWorldServiceBlockingStub stub = HelloWorldServiceGrpc.newBlockingStub(channel);
 		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").build();
+		HelloWorld.HelloResponse response;
+		try{
+			// Finally, make the call using the stub with timeout of 2 seconds
+			response = stub.withDeadlineAfter(2000, TimeUnit.MILLISECONDS).greeting(request);
+			
+		}catch(StatusRuntimeException e){
+			// If the timeout time has expired, stop the client
+			if(Status.DEADLINE_EXCEEDED.getCode() == e.getStatus().getCode())
+				System.out.println("The cause was a timeout exception. ");
+				channel.shutdownNow();
+				return;
 
-		// Finally, make the call using the stub
-		HelloWorld.HelloResponse response = stub.greeting(request);
+		}
+
+		System.out.println("No timeout!");
 
 		// HelloResponse has auto-generated toString method that shows its contents
 		System.out.println(response);

@@ -5,6 +5,8 @@ import pt.tecnico.grpc.HelloWorld;
 import pt.tecnico.grpc.HelloWorldServiceGrpc;
 
 import io.grpc.stub.StreamObserver;
+import io.grpc.Context;
+import io.grpc.Status;
 
 public class HelloWorldServiceImpl extends HelloWorldServiceGrpc.HelloWorldServiceImplBase {
 
@@ -14,9 +16,23 @@ public class HelloWorldServiceImpl extends HelloWorldServiceGrpc.HelloWorldServi
 		// HelloRequest has auto-generated toString method that shows its contents
 		System.out.println(request);
 
+		// Query to see if a particular RPC is no longer wanted
+		if (Context.current().isCancelled()) {
+			responseObserver.onError(Status.DEADLINE_EXCEEDED.withDescription("Time's up!").asRuntimeException());
+			return;
+		}
+
 		// You must use a builder to construct a new Protobuffer object
 		HelloWorld.HelloResponse response = HelloWorld.HelloResponse.newBuilder()
 				.setGreeting("Hello " + request.getName()).build();
+
+		System.out.println("Sleeping for 4 seconds.");
+		try{
+			Thread.sleep(4000);
+		}catch(InterruptedException e){
+			Thread.currentThread().interrupt();
+		}
+		System.out.println("Finished sleeping.");
 
 		// Use responseObserver to send a single response back
 		responseObserver.onNext(response);
