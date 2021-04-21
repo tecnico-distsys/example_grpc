@@ -34,19 +34,18 @@ public class HelloClient {
 		final ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
 
 		// It is up to the client to determine whether to block the call
-		// Here we create a blocking stub, but an async stub,
-		// or an async stub with Future are always possible.
-		HelloWorldServiceGrpc.HelloWorldServiceBlockingStub stub = HelloWorldServiceGrpc.newBlockingStub(channel);
+		// Here we create an async stub
+		HelloWorldServiceGrpc.HelloWorldServiceStub stub = HelloWorldServiceGrpc.newStub(channel);
 		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").build();
 
 		// Finally, make the call using the stub
-		HelloWorld.HelloResponse response = stub.greeting(request);
+		stub.greeting(request, new HelloObserver<HelloWorld.HelloResponse>());
 
-		// HelloResponse has auto-generated toString method that shows its contents
-		System.out.println(response);
+		System.out.println("Shutting down");
 
-		// A Channel should be shutdown before stopping the process.
-		channel.shutdownNow();
+		// A Channel should be shutdown before stopping the process
+		// We can't use shutdownNow as it will cancel the asynchronous call
+		channel.shutdown();
 	}
 
 }
