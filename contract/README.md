@@ -2,7 +2,7 @@
 
 This small library contains the protocol buffers (`protobuf`) of the Hello World gRPC application.
 
-The interface is shared by the server, that implements it, and by the client, that needs it to make remote calls.
+The interface is shared by the server, which implements the interface, and by the client, which needs to know the interface to make remote calls.
 
 
 ## Instructions for using Maven
