@@ -7,6 +7,9 @@ import pt.tecnico.grpc.HelloWorldServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HelloClient {
 
 	public static void main(String[] args) throws Exception {
@@ -37,7 +40,10 @@ public class HelloClient {
 		// Here we create a blocking stub, but an async stub,
 		// or an async stub with Future are always possible.
 		HelloWorldServiceGrpc.HelloWorldServiceBlockingStub stub = HelloWorldServiceGrpc.newBlockingStub(channel);
-		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").build();
+		List<String> hobbies = new ArrayList<>();  // adds hobbies to the message
+		hobbies.add("football");
+		hobbies.add("basketball");
+		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").addAllHobbies(hobbies).build();
 
 		// Finally, make the call using the stub
 		HelloWorld.HelloResponse response = stub.greeting(request);
