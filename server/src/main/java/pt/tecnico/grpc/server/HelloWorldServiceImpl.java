@@ -6,6 +6,8 @@ import pt.tecnico.grpc.HelloWorldServiceGrpc;
 
 import io.grpc.stub.StreamObserver;
 
+import java.util.List;
+
 public class HelloWorldServiceImpl extends HelloWorldServiceGrpc.HelloWorldServiceImplBase {
 
 	@Override
@@ -13,6 +15,14 @@ public class HelloWorldServiceImpl extends HelloWorldServiceGrpc.HelloWorldServi
 
 		// HelloRequest has auto-generated toString method that shows its contents
 		System.out.println(request);
+
+		List<String> hobbies = request.getHobbiesList();
+		String greeting = request.getName();
+		System.out.println("greeting message: " + greeting);
+		System.out.println("hobbies:");
+		for (String hobby : hobbies) {
+			System.out.println(hobby);
+		}
 
 		// You must use a builder to construct a new Protobuffer object
 		HelloWorld.HelloResponse response = HelloWorld.HelloResponse.newBuilder()
