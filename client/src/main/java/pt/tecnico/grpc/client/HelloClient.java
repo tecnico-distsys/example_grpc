@@ -27,25 +27,39 @@ public class HelloClient {
 
 		final String host = args[0];
 		final int port = Integer.parseInt(args[1]);
-		final String target = host + ":" + port;
+
+		final int numServers = 2;
 
 		// Channel is the abstraction to connect to a service endpoint
 		// Let us use plaintext communication because we do not have certificates
-		final ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
+		ManagedChannel[] channels = new ManagedChannel[numServers];
+		HelloWorldServiceGrpc.HelloWorldServiceStub[] stubs = 
+			new HelloWorldServiceGrpc.HelloWorldServiceStub[numServers];
 
-		// It is up to the client to determine whether to block the call
-		// Here we create an async stub
-		HelloWorldServiceGrpc.HelloWorldServiceStub stub = HelloWorldServiceGrpc.newStub(channel);
-		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").build();
+		for (int i = 0; i < numServers; i++) {
+			String target = host + ":" + (port + i);
+			channels[i] = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
+			stubs[i] = HelloWorldServiceGrpc.newStub(channels[i]);
+		}
+		
+		ResponseCollector c = new ResponseCollector();
+			
+		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("Alice").build();
+		stubs[0].greeting(request, new HelloObserver(c));
 
-		// Finally, make the call using the stub
-		stub.greeting(request, new HelloObserver<HelloWorld.HelloResponse>());
+		request = HelloWorld.HelloRequest.newBuilder().setName("Bob").build();
+		stubs[1].greeting(request, new HelloObserver(c));
+
+		c.waitUntilAllReceived(numServers);
+		/* Alternative that only waits for the first response to arrive */
+		//c.waitUntilAllReceived(1); 
+
+		System.out.println("Collected strings: " + c.getStrings());
 
 		System.out.println("Shutting down");
 
-		// A Channel should be shutdown before stopping the process
-		// We can't use shutdownNow as it will cancel the asynchronous call
-		channel.shutdown();
+		for (ManagedChannel ch : channels)
+			ch.shutdown();		
 	}
 
 }
