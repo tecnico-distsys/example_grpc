@@ -23,8 +23,9 @@
 		<mainclass>pt.tecnico.grpc.client.HelloClient</mainclass>
 		<server.host>localhost</server.host>
 		<server.port>8080</server.port>
-		<server.num>2</server.num>
+		<server.num-servers>2</server.num-servers>
 		<server.names>Alice,Bob</server.names>
+		<server.num-responses>1</server.num-responses>
 	</properties>
 
 	<!-- Dependencies are code archives - JARs - 
@@ -72,8 +73,9 @@
 					<arguments>
 						<argument>${server.host}</argument>
 						<argument>${server.port}</argument>
-						<argument>${server.num}</argument>
+						<argument>${server.num-servers}</argument>
 						<argument>${server.names}</argument>
+						<argument>${server.num-responses}</argument>
 					</arguments>
 				</configuration>
 			</plugin>

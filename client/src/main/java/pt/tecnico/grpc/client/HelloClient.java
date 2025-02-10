@@ -21,7 +21,7 @@ public class HelloClient {
 		// check arguments
 		if (args.length < 4) {
 			System.err.println("Argument(s) missing!");
-			System.err.printf("Usage: java %s host port numberOfServers listOfNames%n", HelloClient.class.getName());
+			System.err.printf("Usage: java %s host port numberOfServers listOfNames numberOfResponses%n", HelloClient.class.getName());
 			return;
 		}
 
@@ -29,9 +29,16 @@ public class HelloClient {
 		final int port = Integer.parseInt(args[1]);
 		final int numServers = Integer.parseInt(args[2]);
 		final String[] names = args[3].split(",");
+		final int numResponses = Integer.parseInt(args[4]);
+
+		assert numServers > 0;
+		assert numResponses >= 0;
 
 		// Must specify a name for each request sent to a server
 		assert numServers == names.length;
+
+		// Cannot wait for more responses than the number of requests sent
+		assert numServers >= numResponses;
 
 		// Make a channel and a stub for each server
 		String target;
@@ -53,7 +60,7 @@ public class HelloClient {
 		}
 
 		// Wait for the responses and then print them to the command line
-		collector.waitUntilAllReceived(numServers);
+		collector.waitUntilAllReceived(numResponses);
 		System.out.println("Responses collected:\n- " + collector.getResponses());
 
 		// A Channel should be shutdown before stopping the process
