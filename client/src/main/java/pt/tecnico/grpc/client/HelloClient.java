@@ -19,33 +19,44 @@ public class HelloClient {
 		}
 
 		// check arguments
-		if (args.length < 2) {
+		if (args.length < 4) {
 			System.err.println("Argument(s) missing!");
-			System.err.printf("Usage: java %s host port%n", HelloClient.class.getName());
+			System.err.printf("Usage: java %s host port numberOfServers listOfNames%n", HelloClient.class.getName());
 			return;
 		}
 
 		final String host = args[0];
 		final int port = Integer.parseInt(args[1]);
-		final String target = host + ":" + port;
+		final int numServers = Integer.parseInt(args[2]);
+		final String[] names = args[3].split(",");
 
-		// Channel is the abstraction to connect to a service endpoint
-		// Let us use plaintext communication because we do not have certificates
-		final ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
+		// Must specify a name for each request sent to a server
+		assert numServers == names.length;
 
-		// It is up to the client to determine whether to block the call
-		// Here we create an async stub
-		HelloWorldServiceGrpc.HelloWorldServiceStub stub = HelloWorldServiceGrpc.newStub(channel);
-		HelloWorld.HelloRequest request = HelloWorld.HelloRequest.newBuilder().setName("friend").build();
+		// Make a channel and a stub for each server
+		String target;
+		ManagedChannel[] channels = new ManagedChannel[numServers];
+		HelloWorldServiceGrpc.HelloWorldServiceStub[] stubs = new HelloWorldServiceGrpc.HelloWorldServiceStub[numServers];
+		for (int i = 0; i < numServers; i++) {
+			target = host + ":" + (port + i);
+			channels[i] = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
+			stubs[i] = HelloWorldServiceGrpc.newStub(channels[i]);
+		}
 
-		// Finally, make the call using the stub
-		stub.greeting(request, new HelloObserver<HelloWorld.HelloResponse>());
+		// Build the requests and make the calls using the stubs
+		HelloWorld.HelloRequest request;
+		for (int i = 0; i < numServers; i++) {
+			request = HelloWorld.HelloRequest.newBuilder().setName(names[i]).build();
+			stubs[i].greeting(request, new HelloObserver<HelloWorld.HelloResponse>());
+		}
 
 		System.out.println("Shutting down");
 
 		// A Channel should be shutdown before stopping the process
 		// We can't use shutdownNow as it will cancel the asynchronous call
-		channel.shutdown();
+		for (ManagedChannel channel : channels) {
+			channel.shutdown();
+		}
 	}
 
 }

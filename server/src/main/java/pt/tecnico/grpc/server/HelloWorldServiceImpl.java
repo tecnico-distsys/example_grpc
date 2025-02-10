@@ -6,10 +6,19 @@ import pt.tecnico.grpc.HelloWorldServiceGrpc;
 
 import io.grpc.stub.StreamObserver;
 
+import java.util.Random;
+
 public class HelloWorldServiceImpl extends HelloWorldServiceGrpc.HelloWorldServiceImplBase {
 
 	@Override
 	public void greeting(HelloWorld.HelloRequest request, StreamObserver<HelloWorld.HelloResponse> responseObserver) {
+		final int max_timeout = 5000;
+		Random rng = new Random();
+		try {
+			Thread.sleep(rng.nextInt(max_timeout));
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+		}
 
 		// HelloRequest has auto-generated toString method that shows its contents
 		System.out.println(request);
