@@ -44,16 +44,21 @@ public class HelloClient {
 		}
 
 		// Build the requests and make the calls using the stubs
+		// Use the collector to save the responses
 		HelloWorld.HelloRequest request;
+		ResponseCollector collector = new ResponseCollector();
 		for (int i = 0; i < numServers; i++) {
 			request = HelloWorld.HelloRequest.newBuilder().setName(names[i]).build();
-			stubs[i].greeting(request, new HelloObserver<HelloWorld.HelloResponse>());
+			stubs[i].greeting(request, new HelloObserver(collector));
 		}
 
-		System.out.println("Shutting down");
+		// Wait for the responses and then print them to the command line
+		collector.waitUntilAllReceived(numServers);
+		System.out.println("Responses collected:\n- " + collector.getResponses());
 
 		// A Channel should be shutdown before stopping the process
 		// We can't use shutdownNow as it will cancel the asynchronous call
+		System.out.println("Shutting down");
 		for (ManagedChannel channel : channels) {
 			channel.shutdown();
 		}
